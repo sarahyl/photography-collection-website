@@ -1,3 +1,4 @@
 Django==5.0.1
+gunicorn
 
 #pipreqs "/Users/sarah/OneDrive/Documents/UVA/2023 Spring/CS 3240/s24test"
