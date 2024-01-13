@@ -1,0 +1,66 @@
+<!--
+Citations:
+
+For footer and page-container/content-wrap: https://www.freecodecamp.org/news/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c/ and https://startbootstrap.com/snippets/sticky-footer-flexbox
+Code version: Bootstrap 5.1.0
+
+For css in general: https://www.w3schools.com/css/default.asp
+
+Navbar: https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-navbar.php
+
+Containers: https://getbootstrap.com/docs/5.0/layout/containers/ 
+
+Spacing: https://getbootstrap.com/docs/4.0/utilities/spacing/
+
+Borders: https://getbootstrap.com/docs/4.1/utilities/borders/
+
+Shadows: https://getbootstrap.com/docs/4.1/utilities/shadows/
+
+Flex: https://getbootstrap.com/docs/5.0/utilities/flex/ 
+  
+-->
+
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+
+<link rel="stylesheet" href="{% static 'website/style.css' %}">
+
+<div id="page-container">
+    <div id="content-wrap">
+        <nav class="navbar bg-dark justify-content-center">
+            <div>
+              <ul class="nav justify-content-center">
+                <li class="nav-item">
+                  <a class="nav-link link-info" href="/">website</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link link-info" href="../../comments/list">Comments</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link link-info" href="../../comments">Submit a Comment</a>
+                </li>
+              </ul>
+            </div>
+          </nav>
+        
+
+        <h2 class="container text-center my-3 w-75">Results: {{ question.question_text }}</h2>
+        <div class="container">        
+            <div class="bg-light my-4 w-75 shadow border border-info border-4 rounded text-center"  style= "margin:auto">
+            {% for choice in question.choice_set.all %}
+                <li class="list-group-item">{{ choice.choice_text }} -- {{ choice.vote }} vote{{ choice.vote|pluralize }}</li>
+            {% endfor %}
+            <a href="{% url 'website:detail' question.id %}" class="btn btn-primary my-2 mx-2">Vote again?</a>
+            </div>
+        </div>
+    </div>
+    <footer class="pb-1 pt-3 bg-dark text-white">
+        <div class="container text-center">
+            Copyright &copy; Copyright Info
+            <p>Author: Sarah Liu</p>
+        </div>
+    </footer>
+</div>
