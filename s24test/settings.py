@@ -80,7 +80,7 @@ WSGI_APPLICATION = 's24test.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if 'HEROKU' in os.environ:
+if "DYNO" in os.environ and not "CI" in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
