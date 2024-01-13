@@ -1,5 +1,5 @@
-Django==5.0.1
-django_heroku==0.3.1
+Django
+django_heroku
 gunicorn
 psycopg2
 django-bootstrap-v5
