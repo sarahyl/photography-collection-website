@@ -11,4 +11,5 @@ urlpatterns = [
     path('comments/list/', views.CommentsListView.as_view(), name='commentslist'),
     path('comments/submitcomment/', views.submit_comment, name='submit_comment'),
     path('<int:question_id>/vote/', views.vote, name='vote'),
+    path('map/', views.map, name='map'),
 ]

@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import sys
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -84,10 +85,10 @@ if "DYNO" in os.environ and not "CI" in os.environ:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'HOST': 'ec2-54-234-13-16.compute-1.amazonaws.com',
-            'NAME': 'd778v0t72gbt7m',
-            'USER': 'ixrlflwfotzktb',
-            'PASSWORD': 'f427879a455cdc2a9c2d38f78c8332d1f7ce2b0661337bc3ceda80e433f5ce4f',
+            'HOST': 'ec2-52-20-78-241.compute-1.amazonaws.com',
+            'NAME': 'dck9r09ppiqet9',
+            'USER': 'jnjviecshmmbhv',
+            'PASSWORD': '8232a29de9869a94cc4a4999b66de0cbaf7b3a885b35c06bb6d8ebb258de4046',
             'PORT': '5432',
 
         }
@@ -162,3 +163,5 @@ try:
         django_heroku.settings(locals())
 except ImportError:
     found = False
+
+API_KEY = 'AIzaSyBDAFcWXeWywFRnUV61_CVvmueaOhAfTks'

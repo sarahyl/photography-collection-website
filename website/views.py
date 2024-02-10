@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
+from django.conf import settings
 
 from .models import Question, Choice, Comment
 
@@ -69,3 +70,11 @@ def vote(request, question_id):
         # with POST data. This prevents data from being posted twice if a
         # user hits the Back button.
         return HttpResponseRedirect(reverse('website:results', args=(question.id,)))
+    
+def map(request):
+    key = settings.API_KEY
+    context = {
+        'key': key,
+    }
+    return render(request, 'website/map.html', context)
+
