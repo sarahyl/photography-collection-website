@@ -7,6 +7,11 @@ from django.conf import settings
 
 from .models import Question, Choice, Comment
 
+def login(request):
+    if request.user.is_authenticated:
+        return render(request, "website/index.html")
+    return render(request, "website/login.html",{})
+
 class IndexView(generic.ListView):
     template_name = 'website/index.html'
     context_object_name = 'latest_question_list'

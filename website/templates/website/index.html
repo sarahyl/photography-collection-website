@@ -47,6 +47,7 @@ Flex: https://getbootstrap.com/docs/5.0/utilities/flex/
                 <li class="nav-item">
                   <a class="nav-link link-info" href="map">Map</a>
                 </li>
+                
               </ul>
             </div>
         </nav>
@@ -68,6 +69,11 @@ Flex: https://getbootstrap.com/docs/5.0/utilities/flex/
             </div>
         </div>
     </div>
+
+    <form method="post" action="{% url 'logout' %}">
+      {% csrf_token %}
+      <button type="submit">logout</button>
+      </form>
     
 
 </div>
