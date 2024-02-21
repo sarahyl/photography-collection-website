@@ -62,7 +62,7 @@ MIDDLEWARE = [
     #CHANGED (whitenoise)
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+    #"allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 's24test.urls'
@@ -186,7 +186,7 @@ except ImportError:
 API_KEY = 'AIzaSyBDAFcWXeWywFRnUV61_CVvmueaOhAfTks'
 
 
-SITE_ID = 1
+SITE_ID = 2
 
 SOCIALACCOUNT_LOGIN_ON_GET=True
 
