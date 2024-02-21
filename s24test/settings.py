@@ -62,7 +62,7 @@ MIDDLEWARE = [
     #CHANGED (whitenoise)
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    #"allauth.account.middleware.AccountMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = 's24test.urls'
