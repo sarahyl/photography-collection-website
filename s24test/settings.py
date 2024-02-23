@@ -62,8 +62,11 @@ MIDDLEWARE = [
     #CHANGED (whitenoise)
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
 ]
+
+
+if "DYNO" in os.environ and not "CI" in os.environ:
+    MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware",)
 
 ROOT_URLCONF = 's24test.urls'
 
@@ -90,7 +93,7 @@ WSGI_APPLICATION = 's24test.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 if "DYNO" in os.environ and not "CI" in os.environ:
-    DATABASES = {
+    """ DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
             'HOST': 'ec2-52-20-78-241.compute-1.amazonaws.com',
@@ -100,7 +103,18 @@ if "DYNO" in os.environ and not "CI" in os.environ:
             'PORT': '5432',
 
         }
+    } """
+
+
+    DATABASES = {
+        "default": dj_database_url.config(
+            conn_max_age=600,
+            conn_health_checks=True,
+            ssl_require=True,
+        ),
     }
+    SITE_ID = 2
+
 else:
     DATABASES = {
         'default': {
@@ -108,6 +122,8 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+    SITE_ID = 1
+
  
 
 """
@@ -186,7 +202,7 @@ except ImportError:
 API_KEY = 'AIzaSyBDAFcWXeWywFRnUV61_CVvmueaOhAfTks'
 
 
-SITE_ID = 2
+
 
 SOCIALACCOUNT_LOGIN_ON_GET=True
 
