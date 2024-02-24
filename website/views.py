@@ -1,26 +1,32 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.conf import settings
+from .forms import DocumentForm
 
-from .models import Question, Choice, Comment
+from .models import Question, Choice, Comment, Document
 
 def login(request):
     if request.user.is_authenticated:
         return render(request, "website/index.html")
     return render(request, "website/login.html",{})
-
-class IndexView(generic.ListView):
-    template_name = 'website/index.html'
-    context_object_name = 'latest_question_list'
-
-    def get_queryset(self):
-        """Return the last five published questions."""
-        return Question.objects.filter(
-            pub_date__lte = timezone.now()
-        ).order_by('-pub_date')[:5]
+        
+def index(request):
+    if request.method == 'POST':
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('website:index')
+    else:
+        form = DocumentForm()
+    context = {
+        'latest_question_list': Question.objects.all(),
+        'form': form,
+        'documents': Document.objects.all(),
+    }
+    return render(request, 'website/index.html', context)
 
 class DetailView(generic.DetailView):
     model = Question

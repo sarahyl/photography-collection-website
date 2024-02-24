@@ -35,3 +35,7 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.title_text
+    
+class Document(models.Model):
+    description = models.CharField(max_length=255)
+    document = models.FileField()
