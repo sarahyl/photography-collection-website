@@ -67,7 +67,7 @@ MIDDLEWARE = [
 ]
 
 
-if "DYNO" in os.environ and not "CI" in os.environ:
+if ("DYNO" in os.environ and not "CI" in os.environ) or (os.environ.get('GITHUB_WORKFLOW')):
     MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware",)
 
 ROOT_URLCONF = 's24test.urls'
