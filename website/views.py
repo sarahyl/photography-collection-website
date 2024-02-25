@@ -10,7 +10,7 @@ from .models import Question, Choice, Comment, Document
 
 def login(request):
     if request.user.is_authenticated:
-        return render(request, "website/index.html")
+        return redirect('website:index')
     return render(request, "website/login.html",{})
         
 def index(request):
