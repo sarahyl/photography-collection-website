@@ -13,4 +13,7 @@ urlpatterns = [
     path('comments/submitcomment/', views.submit_comment, name='submit_comment'),
     path('<int:question_id>/vote/', views.vote, name='vote'),
     path('map/', views.map, name='map'),
+    path('comments/deletedocument/<int:pk>', views.delete_document, name='delete_document'),
+    path('document/<int:pk>/', views.document_details, name='document_details')
+
 ]

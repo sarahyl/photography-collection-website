@@ -17,17 +17,32 @@ def index(request):
     if request.method == 'POST':
         form = DocumentForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            return redirect('website:index')
+            document = form.save(commit=False)
+            document.type = request.FILES['document'].content_type #save file's type 
+            document.save()
+            return HttpResponseRedirect(reverse('website:index'))
     else:
         form = DocumentForm()
+
+    documents = Document.objects.all()
+
     context = {
-        'latest_question_list': Question.objects.all(),
         'form': form,
-        'documents': Document.objects.all(),
+        'documents': documents,
     }
     return render(request, 'website/index.html', context)
 
+def document_details(request, pk):
+
+    document = Document.objects.get(id=pk)
+
+    context = {
+        'document': document
+    }
+    
+    return render(request, 'website/document_details.html', context)
+
+    
 class DetailView(generic.DetailView):
     model = Question
     template_name = 'website/details.html'
@@ -89,3 +104,8 @@ def map(request):
     }
     return render(request, 'website/map.html', context)
 
+def delete_document(request, pk):
+    document = Document.objects.all().get(id=pk)
+    document.document.delete(save=False) #deletes the file in s3
+    document.delete() #deletes the Document instance your database
+    return HttpResponseRedirect(reverse('website:index'))
