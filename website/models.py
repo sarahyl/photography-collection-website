@@ -38,4 +38,5 @@ class Comment(models.Model):
     
 class Document(models.Model):
     description = models.CharField(max_length=255)
+    type = models.CharField(max_length=255, null=True)
     document = models.FileField()
