@@ -44,13 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'bootstrap5',
-    'django.contrib.sites', # must
-    'allauth', # must
-    'allauth.account', # must
-    'allauth.socialaccount', # must
-    'allauth.socialaccount.providers.google', # new
+    'django.contrib.sites', 
+    'allauth', 
+    'allauth.account', 
+    'allauth.socialaccount', 
+    'allauth.socialaccount.providers.google',
     'storages',
-    #'uploads',
 ]
 
 MIDDLEWARE = [
@@ -61,7 +60,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    #CHANGED (whitenoise)
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
@@ -95,19 +93,6 @@ WSGI_APPLICATION = 's24test.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 if "DYNO" in os.environ and not "CI" in os.environ:
-    """ DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'HOST': 'ec2-52-20-78-241.compute-1.amazonaws.com',
-            'NAME': 'dck9r09ppiqet9',
-            'USER': 'jnjviecshmmbhv',
-            'PASSWORD': '8232a29de9869a94cc4a4999b66de0cbaf7b3a885b35c06bb6d8ebb258de4046',
-            'PORT': '5432',
-
-        }
-    } """
-
-
     DATABASES = {
         "default": dj_database_url.config(
             conn_max_age=600,
@@ -126,19 +111,6 @@ else:
     }
     SITE_ID = 1
 
- 
-
-"""
-DATABASE_URL = os.environ['DATABASE_URL']
-
-conn = psycopg2.connect(DATABASE_URL, sslmode='require')
-
-DATABASES = {
-    'default': dj_database_url.config(conn_max_age=600, ssl_require=True)
-}
-"""
-
-#CHANGED
 # Switch to SQLite if running tests
 if 'test' in sys.argv:
     DATABASES['default'] = {
@@ -182,23 +154,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-
-#CHANGED
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
-""" AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-AWS_STORAGE_BUCKET_NAME = os.getenv('AWS_STORAGE_BUCKET_NAME')
-AWS_DEFAULT_ACL = 'public-read'
-AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
-# s3 static settings
-AWS_LOCATION = 'static'
-STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
-STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage' """
 
 AWS_ACCESS_KEY_ID = "AKIAU6GDVKRZD4XNTCNH"
 AWS_SECRET_ACCESS_KEY = "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"
@@ -228,9 +187,6 @@ except ImportError:
 
 API_KEY = 'AIzaSyBDAFcWXeWywFRnUV61_CVvmueaOhAfTks'
 
-
-
-
 SOCIALACCOUNT_LOGIN_ON_GET=True
 
 AUTHENTICATION_BACKENDS = [
@@ -242,19 +198,3 @@ ACCOUNT_EMAIL_VERIFICATION = 'none'
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
-
-
-
-""""
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
-"""

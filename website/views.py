@@ -4,44 +4,69 @@ from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
 from django.conf import settings
-from .forms import DocumentForm
-
-from .models import Question, Choice, Comment, Document
+from .forms import ReportForm
+from django.views.generic.edit import CreateView
+from .forms import QuestionForm, ChoiceFormSet
+from .models import Question, Choice, Report
+from django.contrib.auth import logout
+import datetime
 
 def login(request):
     if request.user.is_authenticated:
         return redirect('website:index')
     return render(request, "website/login.html",{})
+
+def logout_view(request):
+    logout(request)
+    return redirect(reverse('website:login'))
         
 def index(request):
-    if request.method == 'POST':
-        form = DocumentForm(request.POST, request.FILES)
-        if form.is_valid():
-            document = form.save(commit=False)
-            document.type = request.FILES['document'].content_type #save file's type 
-            document.save()
-            return HttpResponseRedirect(reverse('website:index'))
-    else:
-        form = DocumentForm()
-
-    documents = Document.objects.all()
-
+    latest_question_list = Question.objects.filter(pub_date__lte = timezone.now()).order_by('-pub_date')[:5]
     context = {
-        'form': form,
-        'documents': documents,
+        'latest_question_list': latest_question_list
     }
     return render(request, 'website/index.html', context)
 
-def document_details(request, pk):
+class PollCreateView(CreateView):
+    form_class = QuestionForm
+    template_name = "website/createpoll.html"
 
-    document = Document.objects.get(id=pk)
-
-    context = {
-        'document': document
-    }
+    def get_context_data(self, **kwargs):
+        context = super(PollCreateView, self).get_context_data(**kwargs)
+        context['choice_formset'] = ChoiceFormSet() #template attached to this view now has a choice_formset availabed in the context
+        return context
     
-    return render(request, 'website/document_details.html', context)
+    def post(self, request, *args, **kwargs):
+        
+        self.object = None
+        form_class = self.get_form_class()
+        form = self.get_form(form_class)
+        choice_formset = ChoiceFormSet(self.request.POST)
+        if form.is_valid() and choice_formset.is_valid():
+            return self.form_valid(form, choice_formset)
+        else:
+            return self.form_invalid(form, choice_formset)
+    
+    def form_valid(self, form, choice_formset):
+        #checking if choices are empty or not
+        for meta in choice_formset:
+            choice_text = meta['choice_text'].value()
+            if choice_text == "":
+                return redirect(reverse("website:add"))
+            #probably add an error message here too 
+            
+        self.object = form.save(commit=False)
+        self.object.pub_date = datetime.datetime.now()
+        self.object.save() #save question
+        choices = choice_formset.save(commit=False)
+        for meta in choices:
+            meta.question = self.object
+            meta.save() #save choices
+        return redirect(reverse("website:index"))
+    
+    def form_invalid(self, form, choice_formset):
 
+        return redirect(reverse("website:createpoll"))
     
 class DetailView(generic.DetailView):
     model = Question
@@ -57,28 +82,6 @@ class ResultsView(generic.DetailView):
     model = Question
     template_name = 'website/results.html'
 
-def comments_view(request):
-    return render(request, 'website/comments.html')
-
-class CommentsListView(generic.ListView):
-    template_name = 'website/commentslist.html'
-    context_object_name = 'comments_list'
-    def get_queryset(self):
-        return Comment.objects.all()
-
-def submit_comment(request):
-    title_text = request.POST['title_text']
-    comment_text = request.POST['comment_text']
-    if (title_text != "") and (comment_text != ""):
-        comment = Comment(title_text = title_text, comment_text=comment_text)
-        comment.save()
-        return HttpResponseRedirect(reverse('website:comments'))
-
-    else:
-        return render(request, 'website/comments.html', {
-            'error_message': "Title and comment are required.",
-        })
-
 def vote(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     try:
@@ -92,20 +95,57 @@ def vote(request, question_id):
     else:
         selected_choice.vote += 1
         selected_choice.save()
-        # Always return an HttpResponseRedirect after successfully dealing
-        # with POST data. This prevents data from being posted twice if a
-        # user hits the Back button.
         return HttpResponseRedirect(reverse('website:results', args=(question.id,)))
     
+class ReportListView(generic.ListView):
+    template_name = 'website/report_list.html'
+    context_object_name = 'report_list'
+    def get_queryset(self):
+        return Report.objects.all()
+
+def new_report_form(request):
+    form = ReportForm()
+
+    report = Report.objects.all()
+
+    context = {
+        'form': form,
+        'report': report,
+    }
+    
+    return render(request, 'website/new_report_form.html', context)
+
+def report_details(request, pk):
+
+    report = Report.objects.get(id=pk)
+
+    context = {
+        'report': report
+    }
+    
+    return render(request, 'website/report_details.html', context)
+
+def submit_report(request):
+    form = ReportForm(request.POST, request.FILES)
+    if form.is_valid():
+        report = form.save(commit=False)
+        print("type", request.FILES['document'].content_type)
+        report.document_type = request.FILES['document'].content_type #save file's type 
+        report.save()
+    return HttpResponseRedirect(reverse('website:index'))
+
+def delete_report(request, pk):
+    report = Report.objects.all().get(id=pk)
+    report.document.delete(save=False) #deletes the file in s3
+    report.delete() #deletes the Report instance your database
+    return HttpResponseRedirect(reverse('website:index'))
+
+"""
 def map(request):
     key = settings.API_KEY
     context = {
         'key': key,
     }
     return render(request, 'website/map.html', context)
+"""
 
-def delete_document(request, pk):
-    document = Document.objects.all().get(id=pk)
-    document.document.delete(save=False) #deletes the file in s3
-    document.delete() #deletes the Document instance your database
-    return HttpResponseRedirect(reverse('website:index'))

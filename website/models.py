@@ -1,10 +1,8 @@
 import datetime
-
 from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 
-# Create your models here.
 class Question(models.Model):
     question_text = models.CharField(max_length=200)
     pub_date = models.DateTimeField('date published')
@@ -28,15 +26,9 @@ class Choice(models.Model):
 
     def __str__(self):
         return self.choice_text
-
-class Comment(models.Model):
-    title_text = models.CharField(max_length=75)
-    comment_text = models.CharField(max_length=400)
-
-    def __str__(self):
-        return self.title_text
     
-class Document(models.Model):
+class Report(models.Model):
+    title = models.CharField(max_length=150)
     description = models.CharField(max_length=255)
-    type = models.CharField(max_length=255, null=True)
+    document_type = models.CharField(max_length=255, null=True)
     document = models.FileField()

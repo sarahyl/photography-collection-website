@@ -1,0 +1,33 @@
+{% extends "website/base.html" %}
+
+{% block title %} Create a Poll{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <form method="post">
+        {% csrf_token %}
+        <div class="card">
+            <div class="card-header">
+                <h4>Add Question</h4>
+            </div>
+            <div class="card-body">
+                {{ form.non_form_errors }}
+                {{ form.as_p }} <!-- Question text: [input box]-->
+                <h5 class="text-info">Add Choices</h5>
+                {{ choice_formset.non_form_errors }}
+                {{ choice_formset.management_form }}
+                {% for form in choice_formset %}
+                <div class="d-flex py-1 inline {{ choice_formset.prefix }}">
+                    {{ form.as_p }}
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="mt-3 mb-5">
+            <button type="submit" class="px-5 btn btn-info">Submit</button>
+        </div>
+    </form>
+</div>
+<a href="{% url 'website:index'  %}">Go back to Polls List</a>
+
+{% endblock %}
