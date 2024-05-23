@@ -1,3 +1,15 @@
 {% load socialaccount %}
-<h1>Google Login</h1>
-<a href="{% provider_login_url 'google'%}?next=/">Login with Google</a>
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <body class="container text-center my-5 mx-auto">
+        <h1 >Feedback Report</h1>
+        <a class="btn btn-primary mx-auto" href="{% provider_login_url 'google'%}?next=/">Login with Google</a>
+    </body>
+
+</html>

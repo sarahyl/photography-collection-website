@@ -1,0 +1,29 @@
+{% extends "website/base.html" %}
+
+{% block title %} Report Details{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto">
+        <b>Title:</b> {{report.title}}
+    </div>
+
+    <div class="container mx-auto">
+        <b>Description:</b> {{report.description}}
+    </div>
+   
+    <div class="container mx-auto">
+        {% if 'image' in report.document_type %}
+            <img src="{{ report.document.url }}" alt="alt" width="500">
+        {% endif %}
+            
+        {% if 'text' in report.document_type %}
+            <object data={{report.document.url}} width="800" height="500"> 
+        {% endif %}
+
+        {% if 'pdf' in report.document_type %}
+            <object data={{report.document.url}} width="800" height="500"> 
+            </object> 
+        {% endif %}
+    </div>
+    
+{% endblock %}

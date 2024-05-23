@@ -1,118 +1,24 @@
-<!--
-Citations:
+{% extends "website/base.html" %}
 
-For footer and page-container/content-wrap: https://www.freecodecamp.org/news/how-to-keep-your-footer-where-it-belongs-59c6aa05c59c/ and https://startbootstrap.com/snippets/sticky-footer-flexbox
-Code version: Bootstrap 5.1.0
+{% block title %} Polls{% endblock %}
 
-For css in general: https://www.w3schools.com/css/default.asp
-
-Navbar: https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-navbar.php
-
-Containers: https://getbootstrap.com/docs/5.0/layout/containers/ 
-
-List group: https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-list-groups.php 
-
-Spacing: https://getbootstrap.com/docs/4.0/utilities/spacing/
-
-Borders: https://getbootstrap.com/docs/4.1/utilities/borders/
-
-Shadows: https://getbootstrap.com/docs/4.1/utilities/shadows/
-
-Flex: https://getbootstrap.com/docs/5.0/utilities/flex/ 
-  
--->
-
-{% load bootstrap5 %}
-{% bootstrap_css %}
-{% bootstrap_javascript %}
-{% bootstrap_messages %}
-{% load static %}
-
-<link rel="stylesheet" href="{% static 'polls/style.css' %}">
-
-<div id="page-container">
-    <div id="content-wrap">
-        <nav class="navbar bg-dark justify-content-center">
-            <div>
-              <ul class="nav justify-content-center">
-                <li class="nav-item">
-                  <a class="nav-link link-info" href="/">Polls</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link link-info" href="comments/list">Comments</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link link-info" href="comments">Submit a Comment</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link link-info" href="map">Map</a>
-                </li>
-                
-              </ul>
-            </div>
-        </nav>
-        <h2 class="container text-center justify-content-center my-4 py-2 text-white">Polls</h2>    
-        
-        <!-- <img src="..\static\polls\images\polls.jpg" alt="clipart of polls" class="rounded mx-auto d-block my-3" style="max-height: 100px;"> -->
-
-        <div class="container" style= "margin:auto">
-            <div class="bg-light w-50 mx-auto shadow border border-info border-4 rounded">
-                {% if latest_question_list %}
-                    <div class="list-group">
-                        {% for question in latest_question_list %}
-                            <a href="{% url 'polls:detail' question.id %}" class="list-group-item my-3 mx-3 py-3 border">{{ question.question_text }}</a>
-                        {% endfor %}
-                    </div>
-                {% else %}
-                    <p>No polls are available.</p>
-                {% endif %}
-            </div>
-        </div>
-    </div>
-
-    <div class="container" style= "margin:auto">
-      <div class="bg-light w-100 mx-auto my-5 shadow border border-info border-4 rounded">
-          {% if documents %}
-              <div class="list-group container w-75 mx-auto my-3 ">
-                  {% for document in documents %}
-                  <div class="container border border-dark border-3">
-                      <div>
-                        {{ document.description }} - {{ document.document }} - {{ document.document.url }} - {{ document.type }}
-                      </div>
-
-                      <div>
-                        <a href="{% url 'website:document_details' document.id %}">Details</a>
-                      </div>
-
-                      <form method="post" action="{% url 'website:delete_document' document.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Delete</button>
-                      </form>
-                  </div>
-                  {% endfor %}
-              </div>
-          {% else %}
-              <p>No documents are available.</p>
-          {% endif %}
-      </div>
+{% block content %}
+<div class="container mx-auto">
+  <div class="text-center my-3">
+    <a class="btn btn-primary" href="{% url 'website:createpoll' %}">Create a New Poll</a>
   </div>
-
-
-
-    <div class="container my-3 mx-3 py-3 px-3">
-      <form method="post" action="{% url 'website:index' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Upload</button>
-      </form>
-    </div>
-
-    <form method="post" action="{% url 'logout' %}">
-      {% csrf_token %}
-      <button type="submit">logout</button>
-    </form>
-    
-
+  <div class="bg-light w-50 mx-auto shadow border border-info border-4 rounded">
+      {% if latest_question_list %}
+          <div class="list-group">
+              {% for question in latest_question_list %}
+                  <a href="{% url 'website:detail' question.id %}" class="list-group-item my-3 mx-3 py-3 border">{{ question.question_text }}</a>
+              {% endfor %}
+          </div>
+      {% else %}
+          <p>No polls are available.</p>
+      {% endif %}
+  </div>
 </div>
+{% endblock %}
 
 

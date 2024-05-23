@@ -1,0 +1,32 @@
+{% extends "website/base.html" %}
+
+{% block title %} Reports {% endblock %}
+
+{% block content %}     
+        
+<div class="container mx-auto">        
+    <div class="bg-light my-4 mx-auto w-75 py-3 px-3 shadow border border-info border-4 rounded" style= "margin:auto;">
+        {% if report_list %}
+          {% for report in report_list %}
+            <div class="container border border-dark border-3">
+              <div>
+                {{ report.title }}
+              </div>
+
+              <div>
+                <a href="{% url 'website:report_details' report.id %}">Details</a>
+              </div>
+
+              <form method="post" action="{% url 'website:delete_report' report.id %}">
+                {% csrf_token %}
+                <button type="submit" class="button button-primary">Delete</button>
+              </form>
+            </div>
+          {% endfor %}
+        {% else %}
+            <p>No reports are available.</p>
+        {% endif %} 
+    </div>
+</div>
+
+{% endblock %}

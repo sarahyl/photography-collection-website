@@ -1,0 +1,39 @@
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% bootstrap_messages %}
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <link rel="stylesheet" href="{% static 'polls/style.css' %}">
+
+    <nav class="navbar bg-dark justify-content-center">
+    <div>
+        <ul class="nav justify-content-center">
+        <li class="nav-item">
+            <a class="nav-link link-info" href="/">Polls</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link link-info" href="{% url 'website:report_list' %}">Reports</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link link-info" href="{% url 'website:new_report_form' %}">Submit a Report</a>
+        </li>
+        <!-- <li class="nav-item">
+            <a class="nav-link link-info" href="map">Map</a>
+        </li> -->
+        <li class="nav-item">
+            <a class="nav-link link-info" href="{% url 'website:logout' %}">Logout</a>
+        </li>
+        </ul>
+    </div>
+    </nav>
+
+    <h2 class="container text-center justify-content-center my-4 py-2">{% block title %} {% endblock %}</h2>    
+    
+    <body>
+        {% block content %}{% endblock %}
+    </body>
+</html>
+
