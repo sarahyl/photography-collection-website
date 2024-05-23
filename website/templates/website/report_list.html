@@ -10,7 +10,7 @@
           {% for report in report_list %}
             <div class="container border border-dark border-3">
               <div>
-                {{ report.description }} - {{ report.document }} - {{ report.document.url }} - {{ report.document_type }}
+                {{ report.title }}
               </div>
 
               <div>
@@ -19,7 +19,7 @@
 
               <form method="post" action="{% url 'website:delete_report' report.id %}">
                 {% csrf_token %}
-                <button type="submit">Delete</button>
+                <button type="submit" class="button button-primary">Delete</button>
               </form>
             </div>
           {% endfor %}

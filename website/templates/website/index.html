@@ -4,8 +4,8 @@
 
 {% block content %}
 <div class="container mx-auto">
-  <div>
-    <a href="{% url 'website:createpoll' %}">Create a New Poll</a>
+  <div class="text-center my-3">
+    <a class="btn btn-primary" href="{% url 'website:createpoll' %}">Create a New Poll</a>
   </div>
   <div class="bg-light w-50 mx-auto shadow border border-info border-4 rounded">
       {% if latest_question_list %}
