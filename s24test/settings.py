@@ -159,8 +159,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-AWS_ACCESS_KEY_ID = #needed!
-AWS_SECRET_ACCESS_KEY = #needed!
+#need to add access key/secret access key info for S3 bucket
+#AWS_ACCESS_KEY_ID = 
+#AWS_SECRET_ACCESS_KEY = 
 AWS_STORAGE_BUCKET_NAME = "s24test"
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
