@@ -159,8 +159,9 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-AWS_ACCESS_KEY_ID = os.environ['S3_KEY']
-AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET']
+if "DYNO" in os.environ and not "CI" in os.environ:
+    AWS_ACCESS_KEY_ID = os.environ['S3_KEY']
+    AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET']
 AWS_STORAGE_BUCKET_NAME = "s24test"
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
