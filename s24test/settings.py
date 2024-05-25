@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 import sys
-import psycopg2
 import dj_database_url
 
 
@@ -177,8 +176,7 @@ DEFAULT_FILE_STORAGE = 's24test.storage_backends.MediaStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Activate Django-Heroku.
-# Use this code to avoid the psycopg2 / django-heroku error!  
-# Do NOT import django-heroku above!
+# avoid the psycopg2 / django-heroku error
 try:
     if 'HEROKU' in os.environ:
         import django_heroku
