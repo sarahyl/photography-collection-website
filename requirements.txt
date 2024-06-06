@@ -32,7 +32,6 @@ PyPDF2
 python-dateutil
 python-ics
 python3-openid
-pywin32
 requests
 requests-oauthlib
 s3transfer
@@ -41,7 +40,5 @@ soupsieve
 sqlparse
 TatSu
 tzdata
-urllib3
-websocket-client
 whitenoise
 yarg
