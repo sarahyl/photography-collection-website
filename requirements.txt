@@ -19,7 +19,6 @@ django-storages
 docker
 docopt
 gunicorn
-heroku
 ics
 idna
 jmespath
