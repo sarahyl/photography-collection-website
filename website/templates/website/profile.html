@@ -1,0 +1,25 @@
+{% extends "website/base.html" %}
+
+
+
+{% block content %}
+
+<div class="container mx-auto">
+    <div class="container mx-auto py-4 px-4 w-75 bg-light shadow border">
+        <h2>My Profile</h2>
+        <p><b>Name: </b>{{user}}</p>
+        <p><b>Username: </b>{{user.username}}</p>
+    </div>
+
+    <div class="container mx-auto w-75 my-5">
+        <h4 class="text-center">My Photos</h4>
+        {% for photograph in photographs %}
+            <div class="container text-center mx-auto my-5">
+                <a href="{% url 'website:photograph_details' photograph.id %}"><img src="{{ photograph.image.url }}" width="500"></a>
+            </div>
+        {% endfor %}
+    </div>
+    
+</div>
+
+{% endblock %}

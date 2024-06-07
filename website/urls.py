@@ -6,6 +6,7 @@ app_name = 'website'
 urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path('', views.index, name='index'),
+    path('profile/<str:username>', views.profile, name='profile'),
     path('<int:pk>/', views.DetailView.as_view(), name='detail'),
     path('<int:pk>/results/', views.ResultsView.as_view(), name='results'),
     path('<int:question_id>/vote/', views.vote, name='vote'),
