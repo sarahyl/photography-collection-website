@@ -1,11 +1,23 @@
 from django import forms
-from .models import Report, Question, Choice
-from django.forms import inlineformset_factory
+from .models import Photograph, Question, Choice
+from django.forms import inlineformset_factory, TextInput
 
-class ReportForm(forms.ModelForm):
+class PhotographForm(forms.ModelForm):
     class Meta:
-        model = Report
-        fields = ('title', 'description', 'document', )
+        model = Photograph
+        fields = ('title', 'description', 'image', )
+        widgets = {
+            'title': TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 40%;',
+                'placeholder': 'Title'
+                }),
+            'description': TextInput(attrs={
+                'class': "form-control", 
+                'style': 'max-width: 100%;',
+                'placeholder': 'Description'
+                })
+        }
 
 class QuestionForm(forms.ModelForm):
     class Meta:
