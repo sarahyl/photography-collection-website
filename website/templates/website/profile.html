@@ -1,12 +1,14 @@
 {% extends "website/base.html" %}
 
+{% block title %}
+📷collections -- profile
+{% endblock %}
 
 
 {% block content %}
 
 <div class="container mx-auto">
-    <div class="container mx-auto py-4 px-4 w-75 bg-light shadow border">
-        <h2>My Profile</h2>
+    <div class="container mx-auto py-4 px-4 w-50 bg-light shadow border">
         <p><b>Name: </b>{{user}}</p>
         <p><b>Username: </b>{{user.username}}</p>
     </div>

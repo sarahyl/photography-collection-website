@@ -7,7 +7,7 @@ from .forms import PhotographForm
 from django.contrib import messages
 from django.views.generic.edit import CreateView
 from .forms import QuestionForm, ChoiceFormSet
-from .models import RegularUser, AdminUser, Question, Choice, Photograph
+from .models import RegularUser, AdminUser, Question, Choice, Photograph, Contest, ContestSubmission
 from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
@@ -56,7 +56,7 @@ def profile(request, username):
         user = RegularUser.objects.get(user=request.user)
     except RegularUser.DoesNotExist:
         user = AdminUser.objects.get(user=request.user)
-        
+
     context = {
         'user': user,
         'photographs': photographs
@@ -193,3 +193,11 @@ def delete_photograph(request, pk):
     photograph.delete() #deletes the report instance in your database
     messages.success(request, "The photograph has been deleted.")
     return HttpResponseRedirect(reverse('website:index'))
+
+#page listing photography contests
+def contests(request):
+    contests = Contest.objects.all()
+    context = {
+        'contests': contests
+    }
+    return render(request, 'website/contests.html', context)

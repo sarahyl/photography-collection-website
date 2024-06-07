@@ -1,9 +1,11 @@
 {% extends base_template %}
 
-{% block title %}{% endblock %}
+{% block title %}
+📷collections -- photograph
+{% endblock %}
 
 {% block content %}
-    <div class="container mx-auto w-75">
+    <div class="container mx-auto my-4 px-4 py-4 w-75">
         <p><b>Title:</b> {{photograph.title}}</p>
         <p><b>Uploaded by:</b> {{photograph.user}}</p>
         <p><b>Description:</b> {{photograph.description}}</p>

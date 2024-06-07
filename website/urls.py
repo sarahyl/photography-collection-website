@@ -14,5 +14,7 @@ urlpatterns = [
     path('upload/', views.upload, name='upload'),
     path('upload/submit/', views.submit_upload_form, name='submit_upload_form'),
     path('delete/<int:pk>', views.delete_photograph, name='delete_photograph'),
-    path('photograph/<int:pk>/', views.photograph_details, name='photograph_details')
+    path('photograph/<int:pk>/', views.photograph_details, name='photograph_details'),
+    path('contests', views.contests, name="contests"),
+
 ]

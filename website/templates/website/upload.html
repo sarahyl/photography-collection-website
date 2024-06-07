@@ -1,9 +1,11 @@
 {% extends "website/base.html" %}
 
-{% block title %}Upload a Photograph{% endblock %}
+{% block title %}
+📷collections -- upload a photograph
+{% endblock %}
 
 {% block content %}
-<div class="container bg-light my-4 px-4 py-4 w-75 shadow border rounded" style="margin:auto;">
+<div class="container bg-light my-4 px-4 py-4 w-75 shadow border rounded">
   <form method="post" action="{% url 'website:submit_upload_form' %}" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
