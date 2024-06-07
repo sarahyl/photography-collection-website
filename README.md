@@ -1,3 +1,3 @@
-Polls/Feedback Report Website: users can log in through Google accounts to vote in polls, create their own polls through a form, as well as submit feedback reports with uploaded files that are stored in Amazon AWS/S3
+# Photography Collection Website
 
-Code for voting in polls implemented following this tutorial https://docs.djangoproject.com/en/5.0/intro/tutorial01/.
+A website where users can log in through Google accounts to upload photos, browse other user-uploaded photos, and enter photography contests.
