@@ -13,13 +13,9 @@
         <p><b>Username: </b>{{user.username}}</p>
     </div>
 
-    <div class="container mx-auto w-75 my-5">
-        <h4 class="text-center">My Photos</h4>
-        {% for photograph in photographs %}
-            <div class="container text-center mx-auto my-5">
-                <a href="{% url 'website:photograph_details' photograph.id %}"><img src="{{ photograph.image.url }}" width="500"></a>
-            </div>
-        {% endfor %}
+    <div class="container">
+        <h4 class="text-center mx-auto w-75 mt-5">My Photos</h4>
+        {% include "website/photogrid.html" with photographs_col1=photographs_col1 photographs_col2=photographs_col2 photographs_col3=photographs_col3 %}
     </div>
     
 </div>
