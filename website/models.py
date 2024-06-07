@@ -51,3 +51,14 @@ class Photograph(models.Model):
     date_uploaded = models.DateTimeField(default=timezone.now)
     image_type = models.CharField(max_length=255, null=True)
     image = models.FileField()
+
+class Contest(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField(default="")
+    date_created = models.DateTimeField(default=timezone.now)
+
+class ContestSubmission(models.Model):
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)
+    photograph = models.ForeignKey(Photograph, on_delete=models.CASCADE, null=True)
+    status = models.CharField(max_length=50)
