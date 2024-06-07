@@ -30,6 +30,7 @@ pycparser
 PyJWT
 PyPDF2
 python-dateutil
+python-dotenv
 python-ics
 python3-openid
 requests
