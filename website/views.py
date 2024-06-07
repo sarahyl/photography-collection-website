@@ -3,29 +3,47 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from .forms import ReportForm
+from .forms import PhotographForm
+from django.contrib import messages
 from django.views.generic.edit import CreateView
 from .forms import QuestionForm, ChoiceFormSet
-from .models import Question, Choice, Report
+from .models import RegularUser, AdminUser, Question, Choice, Photograph
 from django.contrib.auth import logout
+from django.conf import settings
 import datetime
 
-#login view
-def login(request):
-    if request.user.is_authenticated:
-        return redirect('website:index') #redirects to home page
-    return render(request, "website/login.html",{})
 
-#logout. returns users to login page
+#logout. returns users to home page
 def logout_view(request):
     logout(request)
-    return redirect(reverse('website:login'))
-        
-#home page. displays links to recent polls
+    return redirect(reverse('website:index'))
+
+#home page. displays recently uploaded photographs
 def index(request):
-    latest_question_list = Question.objects.filter(pub_date__lte = timezone.now()).order_by('-pub_date')[:5]
+    #base html template changes depending on if the user is logged in or a guest
+    if request.user.is_authenticated:
+        base_template = "website/base.html"
+        #check if the user is a regular user
+        if request.user.groups.filter(name='RegularUser').exists():
+            try: #check if a regular user instance has been created for this user
+                user = RegularUser.objects.get(user=request.user)
+            except RegularUser.DoesNotExist: #if not then create an instance
+                user = RegularUser.objects.create(user=request.user, name=request.user.get_full_name(), username=request.user.get_username(), email=request.user.email)
+        if request.user.groups.filter(name='AdminUser').exists():
+            try: #check if a regular user instance has been created for this user
+                user = AdminUser.objects.get(user=request.user)
+            except AdminUser.DoesNotExist: #if not then create an instance
+                user = AdminUser.objects.create(user=request.user, name=request.user.get_full_name(), username=request.user.get_username(), email=request.user.email)
+    else:
+        base_template = "website/base_guest.html"
+    #latest_question_list = Question.objects.filter(pub_date__lte = timezone.now()).order_by('-pub_date')[:5]
+    
+    photographs = Photograph.objects.order_by('-date_uploaded')
+
     context = {
-        'latest_question_list': latest_question_list
+        #'latest_question_list': latest_question_list,
+        'base_template': base_template,
+        'photographs':photographs
     }
     return render(request, 'website/index.html', context)
 
@@ -103,63 +121,56 @@ def vote(request, question_id):
         selected_choice.vote += 1
         selected_choice.save()
         return HttpResponseRedirect(reverse('website:results', args=(question.id,)))
-    
-#page to display all submitted feedback reports
-class ReportListView(generic.ListView):
-    template_name = 'website/report_list.html'
-    context_object_name = 'report_list'
-    def get_queryset(self):
-        return Report.objects.all()
 
-#page to submit a new feedback report
-def new_report_form(request):
-    form = ReportForm()
-
-    report = Report.objects.all()
+#page to upload a new photograph
+def upload(request):
+    form = PhotographForm()
 
     context = {
-        'form': form,
-        'report': report,
+        'form': form
     }
     
-    return render(request, 'website/new_report_form.html', context)
-
-#page to view the details of a feedback report
-def report_details(request, pk):
-
-    report = Report.objects.get(id=pk)
-
-    context = {
-        'report': report
-    }
-    
-    return render(request, 'website/report_details.html', context)
+    return render(request, 'website/upload.html', context)
 
 #function to submit a report
-def submit_report(request):
+def submit_upload_form(request):
     #get report data
-    form = ReportForm(request.POST, request.FILES)
+    form = PhotographForm(request.POST, request.FILES)
     #save report
     if form.is_valid():
-        report = form.save(commit=False)
-        #print("type", request.FILES['document'].content_type)
-        report.document_type = request.FILES['document'].content_type #save file's type 
-        report.save()
+        photograph = form.save(commit=False)
+        if "image" not in request.FILES['image'].content_type:
+            messages.error(request, "Attached file must be an image.")
+            return HttpResponseRedirect(reverse('website:upload'))
+        photograph.document_type = request.FILES['image'].content_type #save file's type 
+        photograph.user = request.user
+        photograph.save()
     return HttpResponseRedirect(reverse('website:index'))
+
+#page to view the details of a feedback report
+def photograph_details(request, pk):
+    #base html template changes depending on if the user is logged in or a guest
+    if request.user.is_authenticated:
+        base_template = "website/base.html"
+    else:
+        base_template = "website/base_guest.html"
+    
+    user = request.user
+
+    photograph = Photograph.objects.get(id=pk)
+
+    context = {
+        'base_template': base_template,
+        'photograph': photograph,
+        'user': user
+    }
+    
+    return render(request, 'website/photograph_details.html', context)
 
 #function to delete report
-def delete_report(request, pk):
-    report = Report.objects.all().get(id=pk) #get report to delete
-    report.document.delete(save=False) #deletes the file from s3 bucket
-    report.delete() #deletes the report instance in your database
+def delete_photograph(request, pk):
+    photograph = Photograph.objects.all().get(id=pk) #get report to delete
+    #photograph.image.delete(save=False) #deletes the file from s3 bucket
+    photograph.delete() #deletes the report instance in your database
+    messages.success(request, "The photograph has been deleted.")
     return HttpResponseRedirect(reverse('website:index'))
-
-"""
-def map(request):
-    key = settings.API_KEY
-    context = {
-        'key': key,
-    }
-    return render(request, 'website/map.html', context)
-"""
-

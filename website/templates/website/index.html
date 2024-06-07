@@ -1,23 +1,15 @@
-{% extends "website/base.html" %}
+{% extends base_template %}
 
-{% block title %} Polls{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block content %}
+
 <div class="container mx-auto">
-  <div class="text-center my-3">
-    <a class="btn btn-primary" href="{% url 'website:createpoll' %}">Create a New Poll</a>
-  </div>
-  <div class="bg-light w-50 mx-auto shadow border border-info border-4 rounded">
-      {% if latest_question_list %}
-          <div class="list-group">
-              {% for question in latest_question_list %}
-                  <a href="{% url 'website:detail' question.id %}" class="list-group-item my-3 mx-3 py-3 border">{{ question.question_text }}</a>
-              {% endfor %}
-          </div>
-      {% else %}
-          <p>No polls are available.</p>
-      {% endif %}
-  </div>
+    {% for photograph in photographs %}
+        <div class="container text-center mx-auto my-5">
+            <a href="{% url 'website:photograph_details' photograph.id %}"><img src="{{ photograph.image.url }}" width="500"></a>
+        </div>
+    {% endfor %}
 </div>
 {% endblock %}
 

@@ -1,0 +1,30 @@
+{% extends base_template %}
+
+{% block title %} Photograph Details{% endblock %}
+
+{% block content %}
+    <div class="container mx-auto">
+        <b>Title:</b> {{photograph.title}}
+    </div>
+
+    <div class="container mx-auto">
+        <b>Description:</b> {{photograph.description}}
+    </div>
+   
+    <div class="container mx-auto">
+        <img src="{{ photograph.image.url }}" alt="alt" width="80%">
+    </div>
+    
+    {% if user == photograph.user %}
+    <div class="container mx-auto my-3">
+        <a class="btn btn-primary" href="{% url 'website:index' %}">Return to Home</a>
+    </div>
+    <div class="container mx-auto my-3">
+        <form method="post" action="{% url 'website:delete_photograph' photograph.id %}">
+            {% csrf_token %}
+            <button class="btn btn-danger" type="submit" class="button button-primary">Delete</button>
+        </form>
+    </div>
+    {% endif %}
+
+{% endblock %}
