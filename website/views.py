@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView
 from .forms import QuestionForm, ChoiceFormSet
 from .models import RegularUser, AdminUser, Question, Choice, Photograph
+from django.contrib.auth.models import User
 from django.contrib.auth import logout
 from django.conf import settings
 import datetime
@@ -46,6 +47,21 @@ def index(request):
         'photographs':photographs
     }
     return render(request, 'website/index.html', context)
+
+def profile(request, username):
+    user = User.objects.get(username=username)
+    photographs = Photograph.objects.filter(user=user)
+
+    try:
+        user = RegularUser.objects.get(user=request.user)
+    except RegularUser.DoesNotExist:
+        user = AdminUser.objects.get(user=request.user)
+        
+    context = {
+        'user': user,
+        'photographs': photographs
+    }
+    return render(request, 'website/profile.html', context)
 
 #page to create a new poll
 class PollCreateView(CreateView):
@@ -143,7 +159,10 @@ def submit_upload_form(request):
             messages.error(request, "Attached file must be an image.")
             return HttpResponseRedirect(reverse('website:upload'))
         photograph.document_type = request.FILES['image'].content_type #save file's type 
-        photograph.user = request.user
+        try:
+            photograph.user = RegularUser.objects.get(user=request.user)
+        except RegularUser.DoesNotExist:
+            photograph.user = AdminUser.objects.get(user=request.user)
         photograph.save()
     return HttpResponseRedirect(reverse('website:index'))
 
