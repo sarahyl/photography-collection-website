@@ -1,16 +1,18 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404, redirect
-from django.urls import reverse
 from django.views import generic
 from django.utils import timezone
-from .forms import PhotographForm
 from django.contrib import messages
 from django.views.generic.edit import CreateView
-from .forms import QuestionForm, ChoiceFormSet
+from django.shortcuts import render, get_object_or_404, redirect
+from django.urls import reverse
+
+from .forms import QuestionForm, ChoiceFormSet, PhotographForm
 from .models import RegularUser, AdminUser, Question, Choice, Photograph, Contest, ContestSubmission
-from django.contrib.auth.models import User
+
 from django.contrib.auth import logout
-from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+
 import datetime
 
 
@@ -41,25 +43,60 @@ def index(request):
     
     photographs = Photograph.objects.order_by('-date_uploaded')
 
+    #each column of photographs displayed on home page
+    photographs_col1 = []
+    photographs_col2 = []
+    photographs_col3 = []
+
+    #sort photographs into one of three columns
+    for i in range(len(photographs)):
+        if i % 3 == 0:
+            photographs_col1.append(photographs[i])
+        elif i % 2 == 0:
+            photographs_col2.append(photographs[i])
+        else: 
+            photographs_col3.append(photographs[i])
+
     context = {
         #'latest_question_list': latest_question_list,
         'base_template': base_template,
-        'photographs':photographs
+        'photographs_col1':photographs_col1,
+        'photographs_col2': photographs_col2,
+        'photographs_col3': photographs_col3
     }
     return render(request, 'website/index.html', context)
 
 def profile(request, username):
     user = User.objects.get(username=username)
-    photographs = Photograph.objects.filter(user=user)
+    photographs = Photograph.objects.filter(user=user) #get photos uploaded by the current user
 
+    #get either the RegularUser or AdminUser instance
     try:
         user = RegularUser.objects.get(user=request.user)
     except RegularUser.DoesNotExist:
         user = AdminUser.objects.get(user=request.user)
 
+    #each column of photographs displayed on home page
+    photographs_col1 = []
+    photographs_col2 = []
+    photographs_col3 = []
+
+    #sort photographs into one of three columns
+    for i in range(len(photographs)):
+        if i % 3 == 0:
+            photographs_col1.append(photographs[i])
+        elif i % 2 == 0:
+            photographs_col2.append(photographs[i])
+        else: 
+            photographs_col3.append(photographs[i])
+
+
     context = {
         'user': user,
-        'photographs': photographs
+        'photographs': photographs,
+        'photographs_col1':photographs_col1,
+        'photographs_col2': photographs_col2,
+        'photographs_col3': photographs_col3
     }
     return render(request, 'website/profile.html', context)
 
@@ -139,6 +176,7 @@ def vote(request, question_id):
         return HttpResponseRedirect(reverse('website:results', args=(question.id,)))
 
 #page to upload a new photograph
+@login_required
 def upload(request):
     form = PhotographForm()
 
@@ -149,6 +187,7 @@ def upload(request):
     return render(request, 'website/upload.html', context)
 
 #function to submit a report
+@login_required
 def submit_upload_form(request):
     #get report data
     form = PhotographForm(request.POST, request.FILES)
@@ -159,14 +198,11 @@ def submit_upload_form(request):
             messages.error(request, "Attached file must be an image.")
             return HttpResponseRedirect(reverse('website:upload'))
         photograph.document_type = request.FILES['image'].content_type #save file's type 
-        try:
-            photograph.user = RegularUser.objects.get(user=request.user)
-        except RegularUser.DoesNotExist:
-            photograph.user = AdminUser.objects.get(user=request.user)
+        photograph.user = request.user
         photograph.save()
     return HttpResponseRedirect(reverse('website:index'))
 
-#page to view the details of a feedback report
+#page to view the details of a photograph
 def photograph_details(request, pk):
     #base html template changes depending on if the user is logged in or a guest
     if request.user.is_authenticated:
@@ -186,7 +222,8 @@ def photograph_details(request, pk):
     
     return render(request, 'website/photograph_details.html', context)
 
-#function to delete report
+#function to delete photograph
+@login_required
 def delete_photograph(request, pk):
     photograph = Photograph.objects.all().get(id=pk) #get report to delete
     #photograph.image.delete(save=False) #deletes the file from s3 bucket
@@ -195,6 +232,7 @@ def delete_photograph(request, pk):
     return HttpResponseRedirect(reverse('website:index'))
 
 #page listing photography contests
+@login_required
 def contests(request):
     contests = Contest.objects.all()
     context = {

@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="container mx-auto my-4 px-4 py-4 w-75">
+    <div class="container mx-auto px-4 py-4 w-75">
         <p><b>Title:</b> {{photograph.title}}</p>
         <p><b>Uploaded by:</b> {{photograph.user}}</p>
         <p><b>Description:</b> {{photograph.description}}</p>
@@ -15,7 +15,7 @@
         <img src="{{ photograph.image.url }}" width="80%">
     </div>
     
-    {% if user == photograph.user %}
+    
     <div class="container mx-auto my-3 w-75">
         <div class="row">
             <div class="col-auto">
@@ -23,6 +23,7 @@
                     <a class="btn btn-primary" href="{% url 'website:index' %}">Return to Home</a>
                 </div>
             </div>
+            {% if user == photograph.user %}
             <div class="col-auto">
                 <div class="">
                     <form method="post" action="{% url 'website:delete_photograph' photograph.id %}">
@@ -31,11 +32,10 @@
                     </form>
                 </div>
             </div>
+            {% endif %}
         </div>
     </div>
 
-
-
-    {% endif %}
+    
 
 {% endblock %}

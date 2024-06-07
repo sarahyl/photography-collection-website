@@ -14,6 +14,7 @@ from pathlib import Path
 import os
 import sys
 import dj_database_url
+from dotenv import load_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -165,7 +166,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 if "DYNO" in os.environ and not "CI" in os.environ:
     AWS_ACCESS_KEY_ID = os.environ['S3_KEY']
     AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET']
-
+else:
+    load_dotenv()
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
 AWS_STORAGE_BUCKET_NAME = "s24test"
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
@@ -200,5 +204,6 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+LOGIN_URL = '/accounts/google/login/?next=/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
