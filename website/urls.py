@@ -16,5 +16,7 @@ urlpatterns = [
     path('delete/<int:pk>', views.delete_photograph, name='delete_photograph'),
     path('photograph/<int:pk>/', views.photograph_details, name='photograph_details'),
     path('contests', views.contests, name="contests"),
+    path('contests/create', views.create_contest, name='create_contest'),
+    path('contests/create/submit/', views.submit_contest_form, name='submit_contest_form'),
 
 ]

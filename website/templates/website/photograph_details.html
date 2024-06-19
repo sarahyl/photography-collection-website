@@ -1,41 +1,39 @@
 {% extends base_template %}
 
-{% block title %}
-📷collections -- photograph
-{% endblock %}
-
 {% block content %}
-    <div class="container mx-auto px-4 py-4 w-75">
-        <p><b>Title:</b> {{photograph.title}}</p>
-        <p><b>Uploaded by:</b> {{photograph.user}}</p>
-        <p><b>Description:</b> {{photograph.description}}</p>
-    </div>
-   
-    <div class="container mx-auto text-center">
-        <img src="{{ photograph.image.url }}" width="80%">
-    </div>
-    
-    
-    <div class="container mx-auto my-3 w-75">
-        <div class="row">
-            <div class="col-auto">
-                <div class="">
-                    <a class="btn btn-primary" href="{% url 'website:index' %}">Return to Home</a>
-                </div>
-            </div>
-            {% if user == photograph.user %}
-            <div class="col-auto">
-                <div class="">
-                    <form method="post" action="{% url 'website:delete_photograph' photograph.id %}">
-                        {% csrf_token %}
-                        <button class="btn btn-danger" type="submit" class="button button-primary">Delete</button>
-                    </form>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </div>
 
-    
+<h2 class="container text-center justify-content-center my-4 py-2">
+    📷collections -- photograph
+</h2>
+
+<div class="container mx-auto px-4 py-4 w-75">
+    <p><b>Title:</b> {{photograph.title}}</p>
+    <p><b>Uploaded by:</b> {{photograph.user}}</p>
+    <p><b>Description:</b> {{photograph.description}}</p>
+</div>
+
+<div class="container mx-auto text-center">
+    <img src="{{ photograph.image.url }}" width="80%">
+</div>
+
+<div class="container mx-auto my-3 w-75">
+    <div class="row">
+        <div class="col-auto">
+            <div>
+                <input type=button class="btn btn-primary" value="Back" onClick="javascript:history.go(-1);">
+            </div>
+        </div>
+        {% if user == photograph.user %}
+        <div class="col-auto">
+            <div>
+                <form method="post" action="{% url 'website:delete_photograph' photograph.id %}">
+                    {% csrf_token %}
+                    <button class="btn btn-danger" type="submit" class="button button-primary">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
 
 {% endblock %}

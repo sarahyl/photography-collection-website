@@ -1,0 +1,27 @@
+{% extends "website/base.html" %}
+
+<script type="text/javascript" src="/admin/jsi18n/"></script>
+<script type="text/javascript" src="/static/admin/js/core.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/RelatedObjectLookups.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.min.js"></script>
+<script type="text/javascript" src="/static/admin/js/jquery.init.js"></script>
+<script type="text/javascript" src="/static/admin/js/actions.min.js"></script>
+<script type="text/javascript" src="/static/admin/js/calendar.js"></script>
+<script type="text/javascript" src="/static/admin/js/admin/DateTimeShortcuts.js"></script>
+
+
+{% block content %}
+
+<h2 class="container text-center justify-content-center my-4 py-2">
+  📷collections -- create a contest
+</h2>
+
+<div class="container bg-light my-4 px-4 py-4 w-75 shadow border rounded">
+    <form method="post" action="{% url 'website:submit_contest_form' %}" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <input type="submit" value="Create" class="border-primary rounded mb-3 my-2 btn btn-primary"/>
+    </form>
+  </div> 
+
+{% endblock %}

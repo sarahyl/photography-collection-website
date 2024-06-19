@@ -6,7 +6,7 @@ from django.views.generic.edit import CreateView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 
-from .forms import QuestionForm, ChoiceFormSet, PhotographForm
+from .forms import QuestionForm, ChoiceFormSet, PhotographForm, ContestForm
 from .models import RegularUser, AdminUser, Question, Choice, Photograph, Contest, ContestSubmission
 
 from django.contrib.auth import logout
@@ -200,6 +200,7 @@ def submit_upload_form(request):
         photograph.document_type = request.FILES['image'].content_type #save file's type 
         photograph.user = request.user
         photograph.save()
+        messages.success(request, "The photograph has been uploaded.")
     return HttpResponseRedirect(reverse('website:index'))
 
 #page to view the details of a photograph
@@ -234,8 +235,60 @@ def delete_photograph(request, pk):
 #page listing photography contests
 @login_required
 def contests(request):
-    contests = Contest.objects.all()
+    #ongoing contests
+    contests = Contest.objects.filter(deadline__gt=timezone.now())
+
+    #check if user is admin or regular user
+    user = request.user
+    if request.user.groups.filter(name='AdminUser').exists():
+        admin_user = True 
+    else:
+        admin_user = False
+    
+    photographs = Photograph.objects.filter(user=user) #get photos uploaded by the current user
+
+    #each column of photographs displayed on home page
+    photographs_col1 = []
+    photographs_col2 = []
+
+    #sort photographs into one of three columns
+    for i in range(len(photographs)):
+        if i % 2 == 0:
+            photographs_col1.append(photographs[i])
+        else: 
+            photographs_col2.append(photographs[i])
+
     context = {
-        'contests': contests
+        'contests': contests,
+        'admin_user': admin_user,
+        'photographs_col1': photographs_col1,
+        'photographs_col2': photographs_col2
     }
     return render(request, 'website/contests.html', context)
+
+#page to create contests - only accessible by admin users
+@login_required
+def create_contest(request):
+    #checks if the user is an admin user
+    if not request.user.groups.filter(name='AdminUser').exists():
+        messages.error(request, "Not authorized to visit this page.")
+        return redirect(reverse("website:index"))
+    
+    form = ContestForm()
+    context = {
+        'form': form
+    }
+    return render(request, "website/create_contest.html", context)
+
+#function to create a contest
+@login_required
+def submit_contest_form(request):
+    #get report data
+    form = ContestForm(request.POST, request.FILES)
+    #save report
+    if form.is_valid():
+        contest = form.save(commit=False)
+        contest.user = request.user
+        contest.save()
+        messages.success(request, "The contest has been created.")
+    return HttpResponseRedirect(reverse("website:contests"))
