@@ -1,3 +1,4 @@
+/* background image of index page */
 .index-cover {
   background-image: url('images/index_bg.jpg');
   background-repeat: no-repeat;
@@ -6,6 +7,7 @@
   background-position:top;
 }
 
+/* sign in with google button */
 .gsi-material-button {
   -moz-user-select: none;
   -webkit-user-select: none;
