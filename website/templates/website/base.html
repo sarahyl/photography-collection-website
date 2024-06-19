@@ -7,30 +7,23 @@
 <!DOCTYPE html>
 <html>
     <link rel="stylesheet" href="{% static 'website/style.css' %}">
-
-    <nav class="navbar bg-dark justify-content-center">
-    <div>
-        <ul class="nav justify-content-center">
-        <li class="nav-item">
-            <a class="nav-link link-info" href="/">Home</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link link-info" href="{% url 'website:profile' user_username %}">Profile</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link link-info" href="{% url 'website:contests' %}">Contests</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link link-info" href="{% url 'website:upload' %}">Upload</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link link-info" href="{% url 'website:logout' %}">Logout</a>
-        </li>
-        </ul>
-    </div>
+    
+    <nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark sticky-top">
+        <div class="container-fluid">
+            <a class="navbar-brand link-info" href="/">Home</a>
+            <div class="collapse navbar-collapse">
+                <div class="navbar-nav">
+                    <a class="nav-link link-info" href="{% url 'website:profile' user_username %}">Profile</a>
+                    <a class="nav-link link-info" href="{% url 'website:contests' %}">Contests</a>
+                </div>
+            </div>
+            <div class="navbar-nav">
+                <a class="btn btn-outline-light mx-3" href="{% url 'website:upload' %}">Upload</a>
+                <a class="btn btn-light" href="{% url 'website:logout' %}">Logout</a>
+            </div>
+        </div>
     </nav>
 
-    <h2 class="container text-center justify-content-center my-4 py-2">{% block title %} {% endblock %}</h2>
     <body>
         {% block content %}{% endblock %}
     </body>

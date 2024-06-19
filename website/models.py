@@ -54,9 +54,10 @@ class Photograph(models.Model):
 
 class Contest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    name = models.CharField(max_length=255)
+    title = models.CharField(max_length=255)
     description = models.TextField(default="")
-    date_created = models.DateTimeField(default=timezone.now)
+    date_created = models.DateField(default=timezone.now)
+    deadline = models.DateTimeField(null=True)
 
 class ContestSubmission(models.Model):
     contest = models.ForeignKey(Contest, on_delete=models.CASCADE, null=True)

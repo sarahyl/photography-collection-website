@@ -1,23 +1,95 @@
 {% extends 'website/base.html' %}
 
-{% block title %}
-📷collections -- contests
-{% endblock %}
-
 {% block content %}
 
+<h2 class="container text-center justify-content-center my-4 py-2">
+    📷collections -- contests
+</h2>
+
 <div class="container">
-    {% if contests %}
-        {% for contest in contests %}
-            <div class="container text-center mx-auto my-5">
-                <a href="{% url 'website:photograph_details' photograph.id %}"><img src="{{ photograph.image.url }}" width="500"></a>
-            </div>
-        {% endfor %}
-    {% else %}
-    <div class="container mx-auto py-4 px-4 w-75 bg-light shadow border">
-        <p>There are currently no ongoing photography contests.</p>
+    {% if admin_user %}
+    <div class="text-center mx-auto my-4">
+        <a class="btn btn-primary" href="{% url 'website:create_contest' %}">Create A New Contest</a>
     </div>
     {% endif %}
+
+    <h4 class="text-center mx-auto w-75 mt-5">Ongoing Contests</h4>
+
+    <div class="container bg-light my-4 px-2 py-2 w-75 shadow border rounded">
+        {% if contests %}
+            <div class="accordion" id="contestsAccordion">
+            {% for contest in contests %}    
+                <div class="card my-2">
+                    <div class="card-header" id="heading{{contest.id}}">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button class="btn btn-link" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{contest.id}}" aria-expanded="true" aria-controls="collapse{{contest.id}}">
+                                    <h4>{{contest.title}}</h4>
+                                </button>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <p class="mt-2">Deadline: {{contest.deadline}}</p>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div id="collapse{{contest.id}}" class="collapse" aria-labelledby="heading{{contest.id}}" data-parent="#contestsAccordion">
+                        <div class="card-body">
+                            <pre>{{contest.description}}</pre>
+                            <button class="btn btn-outline-dark" href="#submitmodal{{contest.id}}" data-bs-toggle="modal" data-target="#submitmodal{{contest.id}}">Submit Entry</button>
+                            <div class="modal fade submitmodal{{contest.id}}" tabindex="-1" role="dialog" aria-labelledby="submitmodal{{contest.id}}" aria-hidden="true" id="submitmodal{{contest.id}}">
+                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h4 class="modal-title" id="myModalLabel">{{contest.title}}</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p><pre>{{contest.description}}</pre></p>
+                                                <hr>
+                                                <p>Select:</p>
+                                                {% if photographs_col1 %}
+                                                    <div class="row">
+                                                        <div class="col">
+                                                            {% for photograph in photographs_col1 %}
+                                                                <div class="container mx-auto my-4">
+                                                                    <a href="{% url 'website:photograph_details' photograph.id %}"><img src="{{ photograph.image.url }}" class="w-100 shadow-1-strong rounded mb-4"></a>
+                                                                </div>
+                                                            {% endfor %}
+                                                        </div>
+
+                                                        <div class="col">
+                                                            {% for photograph in photographs_col2 %}
+                                                                <div class="container mx-auto my-4">
+                                                                    <a href="{% url 'website:photograph_details' photograph.id %}"><img src="{{ photograph.image.url }}" class="w-100 shadow-1-strong rounded mb-4"></a>
+                                                                </div>
+                                                            {% endfor %}
+                                                        
+                                                        </div>
+                                                    </div>
+                                                {% else %}
+                                                    <div class="text-center my-3">
+                                                        <p>No photos uploaded.</p>
+                                                    </div>
+                                                {% endif %}
+                                            </div>       
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+            </div>
+        {% else %}
+            <div class="mx-4 my-3">
+                <p>There are currently no ongoing photography contests.</p>
+            </div>
+        {% endif %}
+    </div>
+
 </div>
 {% endblock %}
 

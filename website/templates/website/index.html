@@ -1,15 +1,20 @@
 {% extends base_template %}
-
-{% block title %}
-📷collections
-{% endblock %}
+{% load static %}
 
 {% block content %}
 
+<div class="index-cover h-75 text-light text-center d-flex justify-content-center">
+    <div class="align-self-center">
+        <h1 style="font-size: 60px;">📷collections</h1>
+        <hr>
+        <h4>Share and browse photos!</h4>
+        <div style="height: 60px;"></div>
+    </div>
+
+</div>
+
 <div class="container mx-auto">
-
     {% include "website/photogrid.html" with photographs_col1=photographs_col1 photographs_col2=photographs_col2 photographs_col3=photographs_col3 %}
-
 </div>
 {% endblock %}
 

@@ -1,6 +1,7 @@
 from django import forms
-from .models import Photograph, Question, Choice
-from django.forms import inlineformset_factory, TextInput
+from .models import Photograph, Question, Choice, Contest
+from django.forms import inlineformset_factory, TextInput, Textarea
+from django.contrib.admin.widgets import AdminDateWidget
 
 class PhotographForm(forms.ModelForm):
     class Meta:
@@ -17,6 +18,26 @@ class PhotographForm(forms.ModelForm):
                 'style': 'max-width: 100%;',
                 'placeholder': 'Description'
                 })
+        }
+
+class ContestForm(forms.ModelForm):
+    class Meta:
+        model = Contest
+        fields = ('title', 'description', 'deadline')
+        widgets = {
+            'title': TextInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 40%;',
+                'placeholder': 'Title'
+                }),
+            'description': Textarea(attrs={
+                'class': "form-control", 
+                'style': 'max-width: 100%;',
+                'placeholder': 'Description'
+                }),
+            'deadline': AdminDateWidget(attrs={
+                'type': 'date'
+                }),
         }
 
 class QuestionForm(forms.ModelForm):
