@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.views.generic.edit import CreateView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.conf import settings
 
 from .forms import QuestionForm, ChoiceFormSet, PhotographForm, ContestForm
 from .models import RegularUser, AdminUser, Question, Choice, Photograph, Contest, ContestSubmission
@@ -14,6 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 
 import datetime
+import boto3
 
 
 #logout. returns users to home page
@@ -41,7 +43,7 @@ def index(request):
         base_template = "website/base_guest.html"
     #latest_question_list = Question.objects.filter(pub_date__lte = timezone.now()).order_by('-pub_date')[:5]
     
-    photographs = Photograph.objects.order_by('-date_uploaded')
+    photographs = Photograph.objects.order_by('-date_uploaded') #most recent photographs first
 
     #each column of photographs displayed on home page
     photographs_col1 = []
@@ -49,13 +51,13 @@ def index(request):
     photographs_col3 = []
 
     #sort photographs into one of three columns
-    for i in range(len(photographs)):
+    for i in range(1, len(photographs)+1):
         if i % 3 == 0:
-            photographs_col1.append(photographs[i])
+            photographs_col3.append(photographs[i-1])
         elif i % 2 == 0:
-            photographs_col2.append(photographs[i])
+            photographs_col2.append(photographs[i-1])
         else: 
-            photographs_col3.append(photographs[i])
+            photographs_col1.append(photographs[i-1])
 
     context = {
         #'latest_question_list': latest_question_list,
@@ -227,7 +229,8 @@ def photograph_details(request, pk):
 @login_required
 def delete_photograph(request, pk):
     photograph = Photograph.objects.all().get(id=pk) #get report to delete
-    #photograph.image.delete(save=False) #deletes the file from s3 bucket
+    s3_client = boto3.client('s3')
+    s3_client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=photograph.image.name) #deletes the file from s3 bucket
     photograph.delete() #deletes the report instance in your database
     messages.success(request, "The photograph has been deleted.")
     return HttpResponseRedirect(reverse('website:index'))
