@@ -10,6 +10,11 @@
     <p><b>Title:</b> {{photograph.title}}</p>
     <p><b>Uploaded by:</b> {{photograph.user}}</p>
     <p><b>Description:</b> {{photograph.description}}</p>
+    <p><b>Tags:</b>
+        {% for tag in photograph.tags.all %}
+            <a href="{% url 'website:tagged' tag %}">#{{ tag }}</a>
+        {% endfor %}
+    </p>
 </div>
 
 <div class="container mx-auto text-center">

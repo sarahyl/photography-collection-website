@@ -6,17 +6,22 @@ from django.contrib.admin.widgets import AdminDateWidget
 class PhotographForm(forms.ModelForm):
     class Meta:
         model = Photograph
-        fields = ('title', 'description', 'image', )
+        fields = ('title', 'description', 'tags', 'image')
         widgets = {
             'title': TextInput(attrs={
                 'class': "form-control",
-                'style': 'max-width: 40%;',
+                'style': 'max-width: 100%;',
                 'placeholder': 'Title'
                 }),
             'description': TextInput(attrs={
                 'class': "form-control", 
                 'style': 'max-width: 100%;',
                 'placeholder': 'Description'
+                }),
+            'tags': TextInput(attrs={
+                'class': "form-control", 
+                'style': 'max-width: 100%;',
+                'placeholder': 'Tags'
                 })
         }
 

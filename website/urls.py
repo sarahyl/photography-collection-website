@@ -18,5 +18,6 @@ urlpatterns = [
     path('contests', views.contests, name="contests"),
     path('contests/create', views.create_contest, name='create_contest'),
     path('contests/create/submit/', views.submit_contest_form, name='submit_contest_form'),
+    path('tagged/<str:tag>', views.tagged, name='tagged'),
 
 ]

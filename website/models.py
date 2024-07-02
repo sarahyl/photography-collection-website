@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.contrib import admin
 from django.contrib.auth.models import User
+from taggit.managers import TaggableManager
 
 class RegularUser(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
@@ -51,6 +52,7 @@ class Photograph(models.Model):
     date_uploaded = models.DateTimeField(default=timezone.now)
     image_type = models.CharField(max_length=255, null=True)
     image = models.FileField()
+    tags = TaggableManager(blank=False)
 
 class Contest(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)

@@ -16,6 +16,7 @@ django-bootstrap-v5
 django-debug-toolbar
 django-heroku
 django-storages
+django-taggit
 docker
 docopt
 gunicorn
