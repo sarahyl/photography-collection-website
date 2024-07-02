@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'allauth.socialaccount', 
     'allauth.socialaccount.providers.google',
     'storages',
+    'taggit',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +65,7 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
-
+#if heroku or github then include this middleware
 if ("DYNO" in os.environ and not "CI" in os.environ) or (os.environ.get('GITHUB_WORKFLOW')):
     MIDDLEWARE.append("allauth.account.middleware.AccountMiddleware",)
 
@@ -152,32 +153,31 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.0/howto/static-files/
-
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
 
+# media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
-
+#if heroku: get aws keys from heroku config vars
 if "DYNO" in os.environ and not "CI" in os.environ:
     AWS_ACCESS_KEY_ID = os.environ['S3_KEY']
     AWS_SECRET_ACCESS_KEY = os.environ['S3_SECRET']
 else:
+    #if local: get aws keys from env
     load_dotenv()
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
     AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+
+#aws settings
 AWS_STORAGE_BUCKET_NAME = "s24test"
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
 AWS_DEFAULT_ACL = 'public-read'
-#PUBLIC_MEDIA_LOCATION = 'media'
-#MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{PUBLIC_MEDIA_LOCATION}/'
 DEFAULT_FILE_STORAGE = 's24test.storage_backends.MediaStorage'
-#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -195,6 +195,7 @@ except ImportError:
 
 API_KEY = 'AIzaSyBDAFcWXeWywFRnUV61_CVvmueaOhAfTks'
 
+#skip intermediary page when logging in
 SOCIALACCOUNT_LOGIN_ON_GET=True
 
 AUTHENTICATION_BACKENDS = [
@@ -204,6 +205,10 @@ AUTHENTICATION_BACKENDS = [
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
+#login urls
 LOGIN_URL = '/accounts/google/login/?next=/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+#photograph tags are not case sensitive
+TAGGIT_CASE_INSENSITIVE = True

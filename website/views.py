@@ -87,7 +87,7 @@ def profile(request, username):
     for i in range(len(photographs)):
         if i % 3 == 0:
             photographs_col1.append(photographs[i])
-        elif i % 2 == 0:
+        elif (i % 3) - 1 == 0:
             photographs_col2.append(photographs[i])
         else: 
             photographs_col3.append(photographs[i])
@@ -188,7 +188,7 @@ def upload(request):
     
     return render(request, 'website/upload.html', context)
 
-#function to submit a report
+#function to upload a photograph
 @login_required
 def submit_upload_form(request):
     #get report data
@@ -202,6 +202,7 @@ def submit_upload_form(request):
         photograph.document_type = request.FILES['image'].content_type #save file's type 
         photograph.user = request.user
         photograph.save()
+        form.save_m2m()
         messages.success(request, "The photograph has been uploaded.")
     return HttpResponseRedirect(reverse('website:index'))
 
@@ -220,7 +221,7 @@ def photograph_details(request, pk):
     context = {
         'base_template': base_template,
         'photograph': photograph,
-        'user': user
+        'user': user,
     }
     
     return render(request, 'website/photograph_details.html', context)
@@ -250,7 +251,7 @@ def contests(request):
     
     photographs = Photograph.objects.filter(user=user) #get photos uploaded by the current user
 
-    #each column of photographs displayed on home page
+    #each column of photographs
     photographs_col1 = []
     photographs_col2 = []
 
@@ -295,3 +296,42 @@ def submit_contest_form(request):
         contest.save()
         messages.success(request, "The contest has been created.")
     return HttpResponseRedirect(reverse("website:contests"))
+
+def tagged(request, tag):
+    if request.user.is_authenticated:
+        base_template = "website/base.html"
+    else:
+        base_template = "website/base_guest.html"
+
+    photographs = Photograph.objects.filter(tags__name__in=[tag])
+    #each column of photographs
+    photographs_col1 = []
+    photographs_col2 = []
+    photographs_col3 = []
+
+    #sort photographs into one of three columns
+    for i in range(len(photographs)):
+        if i % 3 == 0:
+            photographs_col1.append(photographs[i])
+        elif (i % 3) - 1 == 0:
+            photographs_col2.append(photographs[i])
+        else: 
+            photographs_col3.append(photographs[i])
+    
+    context = {
+        'photographs_col1':photographs_col1,
+        'photographs_col2': photographs_col2,
+        'photographs_col3': photographs_col3,
+        'base_template': base_template,
+        'tag': tag
+    }
+
+    return render(request, 'website/tagged.html', context)
+
+    
+#TODO: function that splits photographs in lists for displaying photographs in columns
+#photographs is the photographs to be sorted into the lists
+#col_num is number of columns in the photogrid
+def photography_cols(photographs, col_num):
+    pass
+    #return photograph_cols
