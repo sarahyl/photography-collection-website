@@ -230,7 +230,7 @@ def photograph_details(request, pk):
 @login_required
 def delete_photograph(request, pk):
     photograph = Photograph.objects.all().get(id=pk) #get report to delete
-    s3_client = boto3.client('s3')
+    s3_client = boto3.client('s3', aws_access_key_id=settings.AWS_ACCESS_KEY_ID, aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY)
     s3_client.delete_object(Bucket=settings.AWS_STORAGE_BUCKET_NAME, Key=photograph.image.name) #deletes the file from s3 bucket
     photograph.delete() #deletes the report instance in your database
     messages.success(request, "The photograph has been deleted.")
