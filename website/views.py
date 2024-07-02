@@ -51,13 +51,13 @@ def index(request):
     photographs_col3 = []
 
     #sort photographs into one of three columns
-    for i in range(1, len(photographs)+1):
+    for i in range(len(photographs)):
         if i % 3 == 0:
-            photographs_col3.append(photographs[i-1])
-        elif i % 2 == 0:
-            photographs_col2.append(photographs[i-1])
+            photographs_col1.append(photographs[i])
+        elif (i % 3) - 1 == 0:
+            photographs_col2.append(photographs[i])
         else: 
-            photographs_col1.append(photographs[i-1])
+            photographs_col3.append(photographs[i])
 
     context = {
         #'latest_question_list': latest_question_list,
