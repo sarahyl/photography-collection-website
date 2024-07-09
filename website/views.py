@@ -29,16 +29,16 @@ def index(request):
     if request.user.is_authenticated:
         base_template = "website/base.html"
         #check if the user is a regular user
-        if request.user.groups.filter(name='RegularUser').exists():
-            try: #check if a regular user instance has been created for this user
-                user = RegularUser.objects.get(user=request.user)
-            except RegularUser.DoesNotExist: #if not then create an instance
-                user = RegularUser.objects.create(user=request.user, name=request.user.get_full_name(), username=request.user.get_username(), email=request.user.email)
         if request.user.groups.filter(name='AdminUser').exists():
             try: #check if a regular user instance has been created for this user
                 user = AdminUser.objects.get(user=request.user)
             except AdminUser.DoesNotExist: #if not then create an instance
                 user = AdminUser.objects.create(user=request.user, name=request.user.get_full_name(), username=request.user.get_username(), email=request.user.email)
+        else:
+            try: #check if a regular user instance has been created for this user
+                user = RegularUser.objects.get(user=request.user)
+            except RegularUser.DoesNotExist: #if not then create an instance
+                user = RegularUser.objects.create(user=request.user, name=request.user.get_full_name(), username=request.user.get_username(), email=request.user.email)
     else:
         base_template = "website/base_guest.html"
     #latest_question_list = Question.objects.filter(pub_date__lte = timezone.now()).order_by('-pub_date')[:5]
