@@ -6,7 +6,7 @@
     📷collections -- photograph
 </h2>
 
-<div class="container mx-auto px-4 py-4 w-75">
+<div class="container mx-auto my-3 px-4 py-4 w-75 bg-light shadow-sm border border-white border-4">
     <p><b>Title:</b> {{photograph.title}}</p>
     <p><b>Uploaded by:</b> {{photograph.user}}</p>
     <p><b>Description:</b> {{photograph.description}}</p>
@@ -17,8 +17,8 @@
     </p>
 </div>
 
-<div class="container mx-auto text-center">
-    <img src="{{ photograph.image.url }}" width="80%">
+<div class="container mx-auto text-center w-75">
+    <img src="{{ photograph.image.url }}" width="100%">
 </div>
 
 <div class="container mx-auto my-3 w-75">
